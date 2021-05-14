@@ -2,7 +2,33 @@ import React from "react";
 import "./App.css";
 import Pict from "Pict";
 import { BG } from "Characters";
-import { Game, Object } from "Game";
+import { Game } from "Game";
+
+type ViewProps = {
+  className?: string;
+  offsetY: number;
+  offsetX: number;
+};
+const View: React.FC<ViewProps> = ({
+  className,
+  children,
+  offsetY,
+  offsetX,
+}) => {
+  return (
+    <div
+      className={className}
+      style={{
+        width: 21 * 32,
+        height: 21 * 32,
+        top: offsetY,
+        left: offsetX,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
 
 type AppProps = {
   game: Game;
@@ -13,19 +39,15 @@ function App(props: AppProps) {
   const offsetY = (document.documentElement.clientHeight - 21 * 32) / 2;
 
   const { game } = props;
-  const { mapData } = game;
-  const [objects, setObjects] = React.useState([] as Object[]);
+  const { bgData, mapData, objects, time } = game;
   const [step, setStep] = React.useState("title");
+  const [counter, setCounter] = React.useState(0);
 
   React.useEffect(() => {
-    const idletimer = setInterval(() => {
-      game.idle();
-      setObjects(game.objects);
+    setInterval(() => {
+      setCounter((s) => s + 1);
     }, 100);
-    return () => {
-      clearInterval(idletimer);
-    };
-  }, [game]);
+  }, []);
 
   React.useEffect(() => {
     const onKeyDown = function (e: KeyboardEvent) {
@@ -40,7 +62,7 @@ function App(props: AppProps) {
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, []);
+  }, [game]);
 
   const getFontStyle = ({
     color,
@@ -57,15 +79,7 @@ function App(props: AppProps) {
   return (
     <div>
       {step === "title" && (
-        <div
-          className="title"
-          style={{
-            width: 21 * 32,
-            height: 21 * 32,
-            top: offsetY,
-            left: offsetX,
-          }}
-        >
+        <View className="title" offsetX={offsetX} offsetY={offsetY}>
           <div style={getFontStyle({ color: "orange", size: 96, y: 200 })}>
             GUNMAN
           </div>
@@ -75,11 +89,11 @@ function App(props: AppProps) {
           >
             PUSH SPACE KEY
           </div>
-        </div>
+        </View>
       )}
       {step === "play" && (
         <>
-          {mapData.map((line, y) => {
+          {bgData.map((line, y) => {
             return line.map((ch, x) => (
               <Pict key={`${x}-${y}`} pictId={BG.GROUND} x={x} y={y} />
             ));
@@ -92,6 +106,11 @@ function App(props: AppProps) {
           {objects.map((obj, i) => {
             return <Pict key={i} pictId={obj.pictId} x={obj.x} y={obj.y} />;
           })}
+          <View className="time" offsetX={offsetX} offsetY={offsetY - 52}>
+            <div style={getFontStyle({ color: "white", size: 48, y: 0 })}>
+              {time}
+            </div>
+          </View>
         </>
       )}
     </div>

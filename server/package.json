@@ -1,0 +1,18 @@
+{
+  "name": "kobo-gunman-sever",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/express": "^4.17.11",
+    "@types/node": "^12.0.0",
+    "@types/sockjs": "^0.3.32",
+    "@types/sockjs-client": "^1.5.0",
+    "express": "^4.17.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "tsc --build -v",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  }
+}

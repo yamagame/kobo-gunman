@@ -24,7 +24,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build-server": "tsc --build server",
+    "start-server": "NODE_PATH=server/dist node server/dist/server.js"
   },
   "eslintConfig": {
     "extends": [

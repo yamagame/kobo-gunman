@@ -1,5 +1,5 @@
-import { BG } from "Characters";
-import { Object } from "Game";
+import { CHAR } from "Characters";
+import { GameObject } from "Game";
 
 export enum PlayerDir {
   LEFT = "LEFT",
@@ -20,7 +20,7 @@ export class Player {
   y: number;
   dir: PlayerDir;
   idleCounter: number;
-  history: Object[] = [];
+  history: GameObject[] = [];
   coin: number;
   constructor({
     id = 0,
@@ -51,8 +51,8 @@ export class Player {
   }
 
   get pictId() {
-    if (this.isDead) return BG.CROSS;
-    return BG.PLAYER + this.dirOffset + ((this.idleCounter / 5) % 2);
+    if (this.isDead) return CHAR.CROSS;
+    return CHAR.PLAYER + this.dirOffset + ((this.idleCounter / 5) % 2);
   }
 
   dead() {
@@ -73,7 +73,17 @@ export class Player {
   }
 
   move() {
-    this.history.push(new Object(this.x, this.y));
+    this.history.push(new GameObject(this.x, this.y));
     this.history = this.history.slice(-30);
+  }
+
+  get info() {
+    return {
+      x: this.x,
+      y: this.y,
+      dir: this.dir,
+      coin: this.coin,
+      dead: this.isDead,
+    };
   }
 }

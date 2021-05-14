@@ -10,6 +10,12 @@ body {
   position: absolute;
 }
 
+.time {
+  text-align: center;
+  display: inline-block;
+  position: absolute;
+}
+
 .blink {
   animation: blinkAnime 2s infinite alternate;
   animation-timing-function: steps(1, start);

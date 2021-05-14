@@ -1,4 +1,4 @@
-import { BG } from "Characters";
+import { CHAR } from "Characters";
 
 export class Coin {
   status: string;
@@ -15,6 +15,6 @@ export class Coin {
   idle() {}
 
   get pictId() {
-    return BG.COIN;
+    return CHAR.COIN;
   }
 }

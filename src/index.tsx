@@ -25,9 +25,6 @@ function ConnectSock() {
     }
     const message = JSON.parse(e.data);
     game.control(message as GameControllMessage);
-    sock.send(
-      JSON.stringify({ status: "OK", index: message.index, uuid: message.uuid })
-    );
   };
 
   sock.onerror = function () {
