@@ -10,7 +10,7 @@
     "express": "^4.17.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "NODE_PATH=dist node dist/server.js",
     "build": "tsc --build -v",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

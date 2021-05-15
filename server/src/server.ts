@@ -6,9 +6,10 @@ const game = new Game();
 const express = require("express");
 const sockjs = require("sockjs");
 const app = express();
-const port = 4000;
+const port = process.env.PORT || 4000;
 const { EventEmitter } = require("events");
 
+app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json({ type: "application/json" }));
 
@@ -17,6 +18,8 @@ function main() {
 
   const echo = sockjs.createServer({ prefix: "/controller" });
   const broadcast: { [index: string]: SockJS.Connection } = {};
+
+  let prevGameJSON = "";
 
   setInterval(() => {
     const now = new Date();
@@ -31,24 +34,25 @@ function main() {
       return time > 0 ? `TIME:${time}` : "TIMEUP!";
     };
     game.idle();
-    for (const id in broadcast) {
-      broadcast[id].write(
-        JSON.stringify({
-          action: "update",
-          objects: game.objects,
-          mapData: game.mapData,
-          time: time(),
-        })
-      );
+    const gameJSON = JSON.stringify({
+      action: "update",
+      objects: game.objects,
+      mapData: game.mapData,
+      time: time(),
+    });
+    if (prevGameJSON !== gameJSON) {
+      for (const id in broadcast) {
+        broadcast[id].write(gameJSON);
+      }
+      prevGameJSON = gameJSON;
     }
     if (game.sound !== "") {
+      const soundJSON = JSON.stringify({
+        action: "sound",
+        sound: game.sound,
+      });
       for (const id in broadcast) {
-        broadcast[id].write(
-          JSON.stringify({
-            action: "sound",
-            sound: game.sound,
-          })
-        );
+        broadcast[id].write(soundJSON);
       }
       game.sound = "";
     }
